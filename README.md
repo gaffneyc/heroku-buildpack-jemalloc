@@ -23,15 +23,15 @@ https://github.com/Scalingo/ruby-buildpack.git
 ### Recommended
 
 Set the JEMALLOC_ENABLED config option to true and jemalloc will be used for
-all commands run inside of your dynos.
+all commands run inside of your containers.
 
 ```console
 scalingo env-set JEMALLOC_ENABLED=true
 ```
 
-### Per dyno
+### Per container
 
-To control when jemalloc is configured on a per dyno basis use
+To control when jemalloc is configured on a per container basis use
 `jemalloc.sh <cmd>` and ensure that JEMALLOC_ENABLED is unset.
 
 Example Procfile:

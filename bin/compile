@@ -15,7 +15,7 @@ if [ -f $ENV_DIR/JEMALLOC_VERSION ]; then
   version=$(cat $ENV_DIR/JEMALLOC_VERSION)
 fi
 
-url="https://github.com/gaffneyc/heroku-buildpack-jemalloc/releases/download/$STACK/jemalloc-$version.tar.bz2"
+url="https://github.com/Scalingo/jemalloc-buildpack/releases/download/$STACK/jemalloc-$version.tar.bz2"
 dest="$BUILD_DIR/vendor/jemalloc"
 
 echo "-----> Vendoring jemalloc $version"

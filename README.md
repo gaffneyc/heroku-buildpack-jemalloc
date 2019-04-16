@@ -1,4 +1,4 @@
-# heroku-buildpack-jemalloc
+# jemalloc Buildpack
 
 [jemalloc](http://jemalloc.net/) is a general purpose malloc implementation
 that works to avoid memory fragmentation in multithreaded applications. This
@@ -8,8 +8,14 @@ platforms.
 ## Install
 
 ```console
-heroku buildpacks:add --index 1 https://github.com/gaffneyc/heroku-buildpack-jemalloc.git
-git push heroku master
+scalingo env-set BUILDPACK_URL=https://github.com/Scalingo/multi-buildpack.git
+```
+
+And in a `.buildpacks` file (example with ruby):
+
+```
+https://github.com/Scalingo/jemalloc-buildpack.git
+https://github.com/Scalingo/ruby-buildpack.git
 ```
 
 ## Usage
@@ -20,7 +26,7 @@ Set the JEMALLOC_ENABLED config option to true and jemalloc will be used for
 all commands run inside of your dynos.
 
 ```console
-heroku config:set JEMALLOC_ENABLED=true
+scalingo env-set JEMALLOC_ENABLED=true
 ```
 
 ### Per dyno
@@ -40,14 +46,14 @@ web: jemalloc.sh bundle exec puma -C config/puma.rb
 Set this to true to automatically enable jemalloc.
 
 ```console
-heroku config:set JEMALLOC_ENABLED=true
+scalingo env-set JEMALLOC_ENABLED=true
 ```
 
 To disable jemalloc set the option to false. This will cause the application to
 restart disabling jemalloc.
 
 ```console
-heroku config:set JEMALLOC_ENABLED=false
+scalingo env-set JEMALLOC_ENABLED=false
 ```
 
 ### JEMALLOC_VERSION
@@ -62,7 +68,7 @@ mentioning tar if the version does not exist.
 require a code change to be deployed in order to take affect.
 
 ```console
-heroku config:set JEMALLOC_VERSION=3.6.0
+scalingo env-set JEMALLOC_VERSION=3.6.0
 ```
 
 #### Available Versions
@@ -80,7 +86,7 @@ heroku config:set JEMALLOC_VERSION=3.6.0
 | 5.1.0   |
 
 The complete and most up to date list of supported versions and stacks is
-available on the [releases page.](https://github.com/gaffneyc/heroku-buildpack-jemalloc/releases)
+available on the [releases page.](https://github.com/Scalingo/jemalloc-buildpack/releases)
 
 ## Thanks
 
@@ -95,26 +101,26 @@ Get started for free today with [Dead Man's Snitch on Heroku](http://github.com/
 
 ## Building
 
-This uses Docker to build against Heroku
-[stack-image](https://github.com/heroku/stack-images)-like images.
+This uses Docker to build against Scalingo
+[stack-image](https://doc.scalingo.com/platform/internals/base-docker-image#top-of-page)-like images.
 
 ```console
 make VERSION=5.1.0
 ```
 
-Artifacts will be dropped in `dist/` based on Heroku stack and jemalloc version.
+Artifacts will be dropped in `dist/` based on Scalingo stack and jemalloc version.
 
 ### Deploying New Versions
 
 - `make VERSION=X.Y.Z`
 - `open dist`
-- Go to [releases](https://github.com/gaffneyc/heroku-buildpack-jemalloc/releases)
-- Edit the release corresponding to each heroku Stack
+- Go to [releases](https://github.com/Scalingo/jemalloc-buildpack/releases)
+- Edit the release corresponding to each scalingo Stack
 - Drag and drop the new build to attach
 
 ### Creating a New Stack
-- Go to [releases](https://github.com/gaffneyc/heroku-buildpack-jemalloc/releases)
+- Go to [releases](https://github.com/Scalingo/jemalloc-buildpack/releases)
 - Click "Draft a new release"
-- Tag is the name of the Stack (e.g. `heroku-18`)
+- Tag is the name of the Stack (e.g. `scalingo-18`)
 - Target is `release-master`
 - Title is `Builds for the [stack] stack`

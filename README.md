@@ -2,7 +2,7 @@
 
 [jemalloc](http://jemalloc.net/) is a general purpose malloc implementation
 that works to avoid memory fragmentation in multithreaded applications. This
-buildpack makes it easy to install and use jemalloc on Heroku and compatible
+buildpack makes it easy to install and use jemalloc on Scalingo and compatible
 platforms.
 
 ## Install

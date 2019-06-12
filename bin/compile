@@ -8,7 +8,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 # Default version
-version="5.1.0"
+version="5.2.0"
 
 # Read version from configured JEMALLOC_VERSION
 if [ -f $ENV_DIR/JEMALLOC_VERSION ]; then

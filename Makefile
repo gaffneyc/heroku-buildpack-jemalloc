@@ -1,6 +1,6 @@
 default: scalingo scalingo-18
 
-VERSION := 5.1.0
+VERSION := 5.2.0
 ROOT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 
 clean:
@@ -34,3 +34,4 @@ all:
 	$(MAKE) scalingo scalingo-18 VERSION=4.5.0
 	$(MAKE) scalingo scalingo-18 VERSION=5.0.1
 	$(MAKE) scalingo scalingo-18 VERSION=5.1.0
+	$(MAKE) scalingo scalingo-18 VERSION=5.2.0

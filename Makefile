@@ -16,7 +16,7 @@ console:
 	@echo "    bin/compile /app/ /cache/ /env/"
 	@echo
 
-	@docker run --rm -ti -v $(shell pwd):/buildpack -e "STACK=heroku-18" -w /buildpack heroku/heroku:18-build \
+	@docker run --rm -ti -v $(shell pwd):/buildpack -e "STACK=scalingo-20" -w /buildpack scalingo/scalingo:20 \
 		bash -c 'mkdir /app /cache /env; exec bash'
 
 # Download missing source archives to ./src/

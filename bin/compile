@@ -2,6 +2,10 @@
 # bin/compile <build-dir> <cache-dir> <env-dir>
 set -e
 
+if [ -n "$BUILDPACK_DEBUG" ]; then
+    set -x
+fi
+
 # Parse params
 BUILD_DIR=$1
 CACHE_DIR=$2

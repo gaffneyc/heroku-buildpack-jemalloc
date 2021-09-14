@@ -114,18 +114,3 @@ make VERSION=5.2.1
 ```
 
 Artifacts will be dropped in `dist/` based on Scalingo stack and jemalloc version.
-
-### Deploying New Versions
-
-- `make VERSION=X.Y.Z`
-- `open dist`
-- Go to [releases](https://github.com/Scalingo/jemalloc-buildpack/releases)
-- Edit the release corresponding to each scalingo Stack
-- Drag and drop the new build to attach
-
-### Creating a New Stack
-- Go to [releases](https://github.com/Scalingo/jemalloc-buildpack/releases)
-- Click "Draft a new release"
-- Tag is the name of the Stack (e.g. `scalingo-18`)
-- Target is `release-master`
-- Title is `Builds for the [stack] stack`

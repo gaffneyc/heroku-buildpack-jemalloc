@@ -15,16 +15,66 @@ if [ -f $ENV_DIR/JEMALLOC_VERSION ]; then
   version=$(cat $ENV_DIR/JEMALLOC_VERSION)
 fi
 
-url="https://github.com/Scalingo/jemalloc-buildpack/releases/download/$STACK/jemalloc-$version.tar.bz2"
+# dest is the path in the application that jemalloc will be extracted to.
 dest="$BUILD_DIR/vendor/jemalloc"
 
-echo "-----> Vendoring jemalloc $version"
-echo "       Fetching $url"
+# bundle is the full path to the cached jemalloc binaries for this version.
+bundle=$CACHE_DIR/jemalloc/$version
+
+# cached checks to see if there is a compatible version in the cache.
+function cached() {
+  # Returns false when there is no matching version in the cache.
+  if [[ ! -d $bundle ]]; then
+    return 1
+  fi
+
+  if [ -f "$bundle/.stack" ]; then
+    CACHED_STACK=$(cat $bundle/.stack)
+  fi
+
+  # True when the downloaded version in the cache is for the same stack as the
+  # compiling dyno. CACHED_STACK will be empty when the .stack file is missing
+  # which also forces a fresh download.
+  [[ $CACHED_STACK == $STACK ]]
+}
+
+function download_jemalloc() {
+  url="https://github.com/Scalingo/jemalloc-buildpack/releases/download/$STACK/jemalloc-$version.tar.bz2"
+
+  # Disable exit on command failure so we can provide better error messages
+  set +e
+
+  echo "       jemalloc: Fetching $url"
+  status=$(curl -sL -f  -w "%{http_code}" -o /tmp/jemalloc.tar.bz2 $url)
+
+  if [[ $status -ge 300 ]]; then
+    echo " !     jemalloc: Server returned HTTP $status"
+    exit 1
+  fi
+
+  # Reenable exit on failure
+  set -e
+
+  mkdir -p $bundle
+  tar -xj -f /tmp/jemalloc.tar.bz2 -C $bundle
+
+  # Store the stack version (e.g. heroku-20) that was downloaded to force a
+  # redownload should the stack change.
+  echo "$STACK" > "$bundle/.stack"
+}
+
+echo "-----> jemalloc: Vendoring $version"
+
+# Check if this version of jemalloc is in the cache and download it if it
+# doesn't exist.
+if ! cached; then
+  download_jemalloc
+fi
 
 mkdir -p $dest
-curl -sL $url | tar -C $dest -xj
+cp -r $bundle -T $dest/
 
-echo "-----> Building runtime environment"
+echo "-----> jemalloc: Building runtime environment"
 mkdir -p $BUILD_DIR/.profile.d
 
 cat <<'EOF' > $BUILD_DIR/.profile.d/jemalloc.sh

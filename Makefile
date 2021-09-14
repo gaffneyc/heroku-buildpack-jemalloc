@@ -6,6 +6,19 @@ ROOT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 clean:
 	rm -rf src/ dist/
 
+console:
+	@echo "Console Help"
+	@echo
+	@echo "Specify a verion to install:"
+	@echo "    echo 5.2.1 > /env/JEMALLOC_VERSION"
+	@echo
+	@echo "To vendor jemalloc:"
+	@echo "    bin/compile /app/ /cache/ /env/"
+	@echo
+
+	@docker run --rm -ti -v $(shell pwd):/buildpack -e "STACK=heroku-18" -w /buildpack heroku/heroku:18-build \
+		bash -c 'mkdir /app /cache /env; exec bash'
+
 # Download missing source archives to ./src/
 src/jemalloc-%.tar.bz2:
 	mkdir -p $$(dirname $@)

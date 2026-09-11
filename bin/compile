@@ -45,10 +45,19 @@ function download() {
   set +e
 
   echo "       jemalloc: Downloading $url"
-  status=$(curl -sL -f  -w "%{http_code}" -o /tmp/jemalloc.tar.bz2 $url)
 
-  if [[ $status -ge 300 ]]; then
-    echo " !     jemalloc: Server returned HTTP $status"
+  # Retry transient failures. GitHub occasionally answers a release download
+  # with a 5xx or drops the connection, and without --retry that single blip
+  # fails the whole build — on a cold cache there is nothing to fall back to.
+  status=$(curl -sL -f --retry 5 --retry-delay 2 --retry-connrefused --retry-all-errors \
+    -w "%{http_code}" -o /tmp/jemalloc.tar.bz2 $url)
+
+  # A connection that never completed reports HTTP 000, which is below the 300
+  # threshold, so the curl exit code has to be checked alongside the status.
+  curl_status=$?
+
+  if [[ $curl_status -ne 0 || $status -ge 300 ]]; then
+    echo " !     jemalloc: Download failed after retries (curl exit $curl_status, HTTP $status)"
     exit 1
   fi
 
